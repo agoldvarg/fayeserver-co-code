@@ -15,7 +15,7 @@ class Subscribe
       @channel_info = channel[/rooms\/\d+/].gsub("rooms/","")
       room_subscribe
       # enter_room
-      # send_faye_msg
+      send_faye_msg
     end
   end
 
@@ -50,7 +50,42 @@ class Subscribe
     end
 
     def send_faye_msg
-       # PrivatePub.publish_to(@channel, "alert('hello world')")
+      # Resque.enqueue(OnlineUsersJob, @channel)
+      # puts PrivatePub.message(@channel, "alert('hello world')")
+      # PrivatePub.publish_to(@channel, "alert('hello world')")
+      # binding.pry
+      # puts "CONFIGURATION: #{PrivatePub.config}"
+      # HTTP.get("http://localhost:3000/sandbox?channel=#{@channel}")
     end
 end
 
+# PrivatePub.publish_to("/ruby/problem-2/rooms/3", "alert('hello world')")
+
+
+# def publish_to(channel, data)
+#   publish_message(message(channel, data))
+# end
+
+# # Sends the given message hash to the Faye server using Net::HTTP.
+# def publish_message(message)
+#   raise Error, "No server specified, ensure private_pub.yml was loaded properly." unless config[:server]
+#   url = URI.parse(config[:server])
+
+#   form = Net::HTTP::Post.new(url.path.empty? ? '/' : url.path)
+#   form.set_form_data(:message => message.to_json)
+
+#   http = Net::HTTP.new(url.host, url.port)
+#   http.use_ssl = url.scheme == "https"
+#   http.start {|h| h.request(form)}
+# end
+
+# # Returns a message hash for sending to Faye
+# def message(channel, data)
+#   message = {:channel => channel, :data => {:channel => channel}, :ext => {:private_pub_token => config[:secret_token]}}
+#   if data.kind_of? String
+#     message[:data][:eval] = data
+#   else
+#     message[:data][:data] = data
+#   end
+#   message
+# end

@@ -1,20 +1,9 @@
 # Run with: rackup private_pub.ru -s thin -E production
-require "bundler/setup"
-require "yaml"
-require 'uri'
-require 'net/http'
-require "redis"
-require "faye"
-require "private_pub"
-require 'faye/redis'
-
-Dir["faye/*.rb"].each {|file| load file }
-
-load 'config/initializers/redis.rb'
+require_relative './config/environment'
 
 Faye::WebSocket.load_adapter('thin')
 
-PrivatePub.load_config(File.expand_path("../config/private_pub.yml", __FILE__), "production")
+PrivatePub.load_config(File.expand_path("../config/private_pub.yml", __FILE__), "development")
 
 options = {:mount => "/faye",
            :timeout => 25,
@@ -36,6 +25,10 @@ app = PrivatePub.faye_app(options)
   app.bind(:disconnect) do |client_id|
     puts "DISCONNECTED: #{client_id}"
     Disconnect.new(client_id)
+  end
+
+  app.bind(:publish) do |client_id, channel, data|
+    puts "PUBLISHED: CLIENT #{client_id} ON CHANNEL #{channel} DATA #{data}"
   end
 
 run app
