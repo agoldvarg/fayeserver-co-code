@@ -14,7 +14,7 @@ load 'config/initializers/redis.rb'
 
 Faye::WebSocket.load_adapter('thin')
 
-PrivatePub.load_config(File.expand_path("../config/private_pub.yml", __FILE__), ENV["RAILS_ENV"] || "production")
+PrivatePub.load_config(File.expand_path("../config/private_pub.yml", __FILE__), "production")
 
 options = {:mount => "/faye",
            :timeout => 25,
@@ -24,14 +24,17 @@ options = {:mount => "/faye",
 app = PrivatePub.faye_app(options)
 
   app.bind(:subscribe) do |client_id, channel|
+    puts "SUBSCRIBED: #{client_id} -- #{channel}"
     Subscribe.new(channel, client_id)
   end
 
   app.bind(:unsubscribe) do |client_id, channel|
+    puts "UNSUBSCRIBED: #{client_id} -- #{channel}"
     Unsubscribe.new(channel, client_id)
   end
 
   app.bind(:disconnect) do |client_id|
+    puts "DISCONNECTED: #{client_id}"
     Disconnect.new(client_id)
   end
 
