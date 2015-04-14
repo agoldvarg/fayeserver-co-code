@@ -145,6 +145,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  faye
   faye-redis
   foreman
   private_pub
