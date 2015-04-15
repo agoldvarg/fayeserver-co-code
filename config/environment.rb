@@ -4,8 +4,6 @@ Bundler.require
 require "yaml"
 require 'uri'
 require 'net/http'
-require "redis"
-require "faye"
 
 require_all "faye"
 require_all "workers"
