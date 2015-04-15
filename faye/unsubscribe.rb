@@ -4,12 +4,14 @@ class Unsubscribe
 
   def initialize(channel, client_id)
     @client_id = client_id
+    @channel = channel
     if channel["/users/status/"]
       @channel_info = channel.gsub("/users/status/","")
       status_unsubscribe
     elsif channel[/rooms\/\d+/]
       @channel_info = channel[/rooms\/\d+/].gsub("rooms/","")
       room_unsubscribe
+      queue_offline_script
     end
   end
 
@@ -32,6 +34,14 @@ class Unsubscribe
 
     def remove_active_user
       $redis.hdel(USER_COUNT, @channel_info)
+    end
+
+    def find_channel_key_by_client_id
+      $redis.hget(USER_MAPPING, @client_id)
+    end
+
+    def queue_offline_script
+      Resque.enqueue(OfflineUser, @channel, find_channel_key_by_client_id)
     end
 
 end
