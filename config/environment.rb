@@ -11,3 +11,4 @@ require_all "faye"
 require_all "workers"
 
 require './config/initializers/redis'
+require './config/initializers/resque'
