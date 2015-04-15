@@ -3,7 +3,7 @@ require_relative './config/environment'
 
 Faye::WebSocket.load_adapter('thin')
 
-PrivatePub.load_config(File.expand_path("../config/private_pub.yml", __FILE__), "development")
+PrivatePub.load_config(File.expand_path("../config/private_pub.yml", __FILE__), "production")
 
 options = {:mount => "/faye",
            :timeout => 25,
