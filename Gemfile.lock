@@ -84,6 +84,7 @@ DEPENDENCIES
   foreman
   private_pub
   pry
+  redis
   require_all
   resque
   thin

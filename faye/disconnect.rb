@@ -7,6 +7,6 @@ class Disconnect
   end
 
   def remove_user_mapping
-    $redis.hdel('user_client_mapping', @client_id)
+    $redis.hdel(USER_MAPPING, @client_id)
   end
 end

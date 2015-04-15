@@ -5,6 +5,7 @@ gem 'faye'
 gem 'private_pub'
 gem 'thin'
 gem 'foreman'
+gem 'redis'
 gem 'resque', :require => "resque/server"
 gem 'faye-redis'
 gem 'pry'
